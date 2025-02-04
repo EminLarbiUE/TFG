@@ -1,0 +1,8 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción}{1}{section.1}%
+\contentsline {section}{\numberline {2}Objetivos}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Objetivo principal}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Objetivos secundarios}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Indicadores de éxito}{2}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Metodología}{3}{section.3}%
+\contentsline {section}{\numberline {4}Temporalización}{3}{section.4}%

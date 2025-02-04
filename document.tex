@@ -1,0 +1,170 @@
+\documentclass[12pt,a4paper]{article}
+
+%----------------------------------------------------------------------
+% PAQUETES Y CONFIGURACIONES
+%----------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{times}               % Fuente Times New Roman (requerida por APA)
+\usepackage{indentfirst}         % Sangría en la primera línea de cada párrafo
+\usepackage{geometry}            
+\geometry{
+	left=2.54cm,                % Margen de 1 pulgada = 2.54 cm
+	right=2.54cm,
+	top=2.54cm,
+	bottom=2.54cm
+}
+\usepackage{setspace}
+\doublespacing                  % Interlineado doble (norma APA)
+\setlength{\parindent}{0.5in}   % Sangría de 0.5 pulgadas en la primera línea
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage{pgfgantt}           % Para el diagrama de Gantt (opcional)
+\usepackage{hyperref}           % Para enlaces DOI y URL en referencias
+
+%----------------------------------------------------------------------
+% CONFIGURACIÓN APA
+%----------------------------------------------------------------------
+\usepackage[natbibapa]{apacite}  % Paquete para citación en APA
+\bibliographystyle{apacite}      % Estilo bibliográfico APA
+
+%----------------------------------------------------------------------
+% DATOS DEL DOCUMENTO
+%----------------------------------------------------------------------
+\title{\textbf{Resolución de la Ecuación de Schrödinger mediante Redes Neuronales Profundas (PINN)}\\
+	\normalsize{Trabajo Fin de Grado (TFG)}}
+\author{Emin Larbi Bendahoua Espinosa\\ Universidad Europea de Valencia}
+\date{\today}
+
+%----------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------
+\begin{document}
+	
+	% PORTADA (Adaptada a estilo APA)
+	\begin{titlepage}
+		\centering
+		\includegraphics[width=0.5\textwidth]{logo_ue.png}\\[2cm]
+		
+		{\Large GRADO EN FÍSICA\par}
+		\vfill
+		
+		{\Huge \bfseries Resolución de la Ecuación de Schrödinger\\ mediante Redes Neuronales Profundas (PINN)\par}
+		\vfill
+		
+		\begin{center}
+			\large
+			Presentado por:\\
+			\textbf{EMIN LARBI BENDAHOUA ESPINOSA}\\[1cm]
+			{Dirigido por:}\\
+			\textbf{HÉCTOR ESPINÓS MORATÓ}\\[1cm]
+			{Curso Académico 2024-2025}\\
+			
+		\end{center}
+		\vfill
+	\end{titlepage}
+	
+	% ÍNDICE
+	\tableofcontents
+	\clearpage
+	\setcounter{page}{1}
+	
+	%----------------------------------------------------------------------
+	% RESUMEN / ABSTRACT (Aproximadamente 150 palabras)
+	%----------------------------------------------------------------------
+	\section*{Resumen / Abstract}
+	Este trabajo presenta la aplicación de \textit{Physics-Informed Neural Networks} (PINN) para resolver la ecuación de Schrödinger dependiente del tiempo y del espacio en diversos potenciales de interés físico. El objetivo principal es desarrollar un simulador que, con la mínima discretización posible, capture el comportamiento cuántico de partículas en distintas configuraciones, incluyendo fenómenos de propagación y túnel. Se exploran extensiones relacionadas con el uso de materiales bidimensionales, como el grafeno, y su impacto en el diseño de transistores de efecto de campo a escala nanométrica. La metodología propone la integración directa de la ecuación gobernante en la función de pérdida de la red neuronal, reduciendo el coste computacional respecto a métodos tradicionales. Los indicadores de éxito incluyen la generación de animaciones realistas de la función de onda gaussiana y precisiones superiores al 95\% en casos de prueba.
+	
+	\textbf{Palabras clave:} Redes Neuronales, Ecuación de Schrödinger, PINN, Grafeno, Transistores.
+	
+	%----------------------------------------------------------------------
+	% INTRODUCCIÓN
+	%----------------------------------------------------------------------
+	\section{Introducción}
+	La ecuación de Schrödinger, formulada en 1926, constituye la piedra angular de la mecánica cuántica no relativista. Su resolución permite predecir el comportamiento de partículas a escalas atómicas y subatómicas, siendo esencial para comprender fenómenos como el efecto túnel, los estados ligados en pozos de potencial y la dinámica de electrones en materiales bidimensionales. Tradicionalmente, los métodos numéricos para resolver esta ecuación —diferencias finitas, elementos espectrales o mallas adaptativas— han enfrentado desafíos significativos en escenarios complejos, tales como sistemas de alta dimensionalidad o potenciales dependientes del tiempo con discontinuidades.
+	
+	Estas limitaciones se intensifican en problemas inversos (inferir potenciales a partir de mediciones) o en la modelación de materiales avanzados como el grafeno, donde la interacción entre la estructura hexagonal del carbono y campos externos genera fenómenos cuánticos no triviales. En este contexto, las Physics-Informed Neural Networks (PINN) emergen como un paradigma disruptivo al incorporar directamente las ecuaciones gobernantes en la función de pérdida de la red, eliminando la dependencia de mallas espaciales y permitiendo resolver EDP de forma \textit{mesh-free}.
+	
+	%----------------------------------------------------------------------
+	% OBJETIVOS
+	%----------------------------------------------------------------------
+	\section{Objetivos}
+	El presente TFG persigue los siguientes objetivos:
+	
+	\subsection{Objetivo principal}
+	\begin{itemize}
+		\item Desarrollar un \textbf{simulador} basado en PINN que resuelva la ecuación de Schrödinger de manera eficiente, generando resultados visuales y cuantitativos sobre la evolución temporal de la función de onda.
+	\end{itemize}
+	
+	\subsection{Objetivos secundarios}
+	\begin{itemize}
+		\item Explorar la \textbf{aplicación en grafeno}, estudiando la propagación cuántica en potenciales asociados a este material bidimensional.
+		\item \textbf{Investigar la relevancia en el diseño de transistores}, evaluando cómo la aproximación por PINN podría contribuir a la simulación y optimización de dispositivos de efecto de campo a escala nanométrica.
+	\end{itemize}
+	
+	\subsection{Indicadores de éxito}
+	\begin{itemize}
+		\item \textbf{Animación realista de la función de onda gaussiana} y concordancia con soluciones analíticas o numéricas.
+		\item Precisión superior al 95\% en comparación con métodos tradicionales.
+		\item Reducción de la complejidad computacional, medida a través de los tiempos de entrenamiento y evaluación.
+	\end{itemize}
+	
+	%----------------------------------------------------------------------
+	% METODOLOGÍA
+	%----------------------------------------------------------------------
+	\section{Metodología}
+	El método científico que se sigue en este trabajo comprende:
+	
+	\begin{enumerate}
+		\item \textbf{Observación y definición del problema:} Identificación de fenómenos cuánticos relevantes y delimitación del problema de simular la ecuación de Schrödinger mediante PINN.
+		\item \textbf{Formulación de hipótesis:} Establecimiento de hipótesis basadas en la revisión bibliográfica que orienten el diseño del simulador.
+		\item \textbf{Diseño experimental y simulación:} Planificación de la arquitectura de la red, condiciones iniciales y parámetros para la simulación.
+		\item \textbf{Recopilación y análisis de datos:} Evaluación cuantitativa y visual de los resultados, comparándolos con predicciones teóricas.
+		\item \textbf{Conclusiones y retroalimentación:} Validación o ajuste de las hipótesis iniciales a partir del análisis de datos.
+	\end{enumerate}
+	
+	%----------------------------------------------------------------------
+	% TEMPORALIZACIÓN (DIAGRAMA GANTT)
+	%----------------------------------------------------------------------
+	\section{Temporalización}
+	A continuación se presenta un diagrama de Gantt tentativo que ilustra la planificación de las fases del proyecto:
+	
+	\begin{center}
+		\begin{ganttchart}[
+			x unit=0.055cm,
+			y unit title=0.6cm,
+			y unit chart=0.5cm,
+			vgrid={dotted},
+			hgrid,
+			time slot format=isodate,
+			title/.style={draw=none, fill=none},
+			title label font=\tiny,
+			bar label font=\tiny,
+			bar/.style={fill=gray!20, draw=gray, rounded corners=2pt},
+			bar height=0.6,
+			group right shift=0,
+			group top shift=0.6,
+			group height=0.2,
+			milestone label font=\tiny
+			]{2024-08-01}{2025-01-31}
+			
+			\gantttitlecalendar{year, month=shortname} \\
+			
+			\ganttgroup{Fase inicial}{2024-08-01}{2025-01-31} \\
+			\ganttbar{Estudio preliminar (ecuaciones no Schr.)}{2024-08-01}{2024-08-31} \\
+			\ganttbar{1D Schr. sin tiempo, parte real}{2024-09-01}{2024-09-30} \\
+			\ganttbar{Añadir parte compleja}{2024-10-01}{2024-10-31} \\
+			\ganttbar{Intentos de dependencia temporal}{2024-11-01}{2024-12-31} \\
+			\ganttbar{Descubrir JAX-PI + modelo gaussiano}{2025-01-01}{2025-01-31} \\
+		\end{ganttchart}
+	\end{center}
+	
+	%----------------------------------------------------------------------
+	% BIBLIOGRAFÍA (Se incluirán las referencias según normas APA)
+	%----------------------------------------------------------------------
+	\bibliography{referencias}
+	
+\end{document}
